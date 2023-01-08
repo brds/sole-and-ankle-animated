@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 
-import { WEIGHTS } from '../../constants';
+import { QUERIES, WEIGHTS } from '../../constants';
 import { formatPrice, pluralize, isNewShoe } from '../../utils';
 import Spacer from '../Spacer';
 
@@ -35,7 +35,9 @@ const ShoeCard = ({
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
-          <Image alt="" src={imageSrc} />
+          <ImageMask>
+            <Image alt="" src={imageSrc} />
+          </ImageMask>
           {variant === 'on-sale' && <SaleFlag>Sale</SaleFlag>}
           {variant === 'new-release' && (
             <NewFlag>Just released!</NewFlag>
@@ -79,9 +81,22 @@ const ImageWrapper = styled.div`
   position: relative;
 `;
 
+const ImageMask = styled.div`
+  border-radius: 16px 16px 4px 4px;
+  overflow: hidden;
+`;
+
 const Image = styled.img`
   width: 100%;
-  border-radius: 16px 16px 4px 4px;
+
+  @media ${QUERIES.acceptsMotions} {
+    transform-origin: center 90%;
+    transition: transform 500ms ease-in-out;
+    ${ImageWrapper}:hover & {
+      transform: scale(1.1);
+      transition-duration: 250ms;
+    }
+  }
 `;
 
 const Row = styled.div`
@@ -121,6 +136,12 @@ const Flag = styled.div`
   font-weight: ${WEIGHTS.bold};
   color: var(--color-white);
   border-radius: 2px;
+
+  transition: filter 500ms 100ms ease-in-out;
+  ${ImageWrapper}:hover & {
+    filter: brightness(125%);
+    transition-duration: 250ms;
+  }
 `;
 
 const SaleFlag = styled(Flag)`
