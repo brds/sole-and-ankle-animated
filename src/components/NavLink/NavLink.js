@@ -1,16 +1,11 @@
 import styled from "styled-components"
 import { QUERIES, WEIGHTS } from "../../constants";
 
-
 const NavLink = ({href, label}) => {
-
-
   return (
     <Anchor href={href}>
-      <Wrapper>
-        <span>{label}</span>
-        <HoverState>{label}</HoverState>
-      </Wrapper>
+      <IdleState>{label}</IdleState>
+      <HoverState aria-hidden={true}>{label}</HoverState>
     </Anchor>
   );
 }
@@ -22,23 +17,27 @@ const Anchor = styled.a`
   color: var(--color-gray-900);
   font-weight: ${WEIGHTS.medium};
 
+  position: relative;
+  /*
+    Hover animation moves the 2 children around, 
+    and only one should be visible at a time.
+  */
   overflow: hidden;
-  height: ${28 / 16}rem;
   
   &:first-of-type {
     color: var(--color-secondary);
   }
-  `;
+`;
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+const Text = styled.span`
+  display: block;
+  transform: translateY(var(--translate-from));
 
   ${Anchor}:hover & {
-    transform: translateY(-50%);
+    transform: translateY(var(--translate-to));
   }
 
-  @media ${QUERIES.acceptsMotions} {
+  @media ${QUERIES.canHoverAndAcceptsMotion} {
     transition: transform 400ms ease-in-out;
 
     ${Anchor}:hover & {
@@ -47,7 +46,18 @@ const Wrapper = styled.div`
   }
 `;
 
-const HoverState = styled.span`
+const IdleState = styled(Text)`
+  --translate-from: 0%;
+  --translate-to: -100%;
+  `;
+
+const HoverState = styled(Text)`
+  --translate-from: 100%;
+  --translate-to: 0%;
+
+  position: absolute;
+  top: 0;
+  left: 0;
   font-weight: ${WEIGHTS.bold};
 `;
 

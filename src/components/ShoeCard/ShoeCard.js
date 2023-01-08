@@ -35,9 +35,7 @@ const ShoeCard = ({
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
-          <ImageMask>
-            <Image alt="" src={imageSrc} />
-          </ImageMask>
+          <Image alt="" src={imageSrc} />
           {variant === 'on-sale' && <SaleFlag>Sale</SaleFlag>}
           {variant === 'new-release' && (
             <NewFlag>Just released!</NewFlag>
@@ -73,28 +71,34 @@ const ShoeCard = ({
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
+  outline-offset: 8px;
 `;
 
-const Wrapper = styled.article``;
-
-const ImageWrapper = styled.div`
+const Wrapper = styled.article`
   position: relative;
 `;
 
-const ImageMask = styled.div`
+const ImageWrapper = styled.div`
   border-radius: 16px 16px 4px 4px;
+  /*
+    Image zooms-in on hover,
+    prevent the spillout
+  */
   overflow: hidden;
 `;
 
 const Image = styled.img`
   width: 100%;
+  display: block;
 
-  @media ${QUERIES.acceptsMotions} {
+  @media ${QUERIES.canHoverAndAcceptsMotion} {
+    will-change: transform;
     transform-origin: center 90%;
-    transition: transform 500ms ease-in-out;
-    ${ImageWrapper}:hover & {
+    transition: transform 600ms ease-in-out;
+    ${Link}:hover &,
+    ${Link}:focus & {
       transform: scale(1.1);
-      transition-duration: 250ms;
+      transition-duration: 200ms;
     }
   }
 `;
@@ -138,7 +142,8 @@ const Flag = styled.div`
   border-radius: 2px;
 
   transition: filter 500ms 100ms ease-in-out;
-  ${ImageWrapper}:hover & {
+  ${Link}:hover &,
+  ${Link}:focus & {
     filter: brightness(125%);
     transition-duration: 250ms;
   }

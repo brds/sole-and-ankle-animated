@@ -60,7 +60,7 @@ const BackDrop = styled.div`
   width: 100%;
   height: 100%;
   background: var(--color-backdrop);
-  animation: ${fadeIn} 800ms ease-out;
+  animation: ${fadeIn} 500ms;
 `;
 
 const panelSlideIn = keyframes`
@@ -72,16 +72,19 @@ const panelSlideIn = keyframes`
   }
 `;
 
+// We need to overfill because the easing function overshoots.
 const Container = styled(DialogContent)`
+  --overfill: 16px;
   position: absolute;
   top: 0;
   right: 0;
   background: white;
-  width: 300px;
+  width: calc(300px + var(--overfill));
+  margin-right: calc(var(--overfill) * -1);
   height: 100%;
   
-  @media ${QUERIES.acceptsMotions} {
-    animation: ${panelSlideIn} 500ms ease-out;
+  @media ${QUERIES.acceptsMotion} {
+    animation: ${panelSlideIn} 500ms cubic-bezier(.09,.59,.12,1.17);
     animation-fill-mode: backwards;
     animation-delay: 200ms;
   }
@@ -97,7 +100,7 @@ const Content = styled.div`
   animation-fill-mode: backwards;
   animation-delay: 250ms;
 
-  @media ${QUERIES.acceptsMotions} {
+  @media ${QUERIES.acceptsMotion} {
     animation-delay: 500ms;
   }
 `;
@@ -105,7 +108,7 @@ const Content = styled.div`
 const CloseButton = styled(UnstyledButton)`
   position: absolute;
   top: 10px;
-  right: 0;
+  right: var(--overfill);
   padding: 16px;
 `;
 
